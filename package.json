@@ -1,0 +1,25 @@
+{
+  "name": "timeloggerapi",
+  "version": "1.0.0",
+  "description": "Api to handle rest api requirements for a time loggin applicaiton",
+  "main": "index.js",
+  "scripts": {
+    "test": "test",
+    "start": "nodemon run index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/krydge/TimeLoggerAPi.git"
+  },
+  "author": "Rydge Software",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/krydge/TimeLoggerAPi/issues"
+  },
+  "homepage": "https://github.com/krydge/TimeLoggerAPi#readme",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.18.2",
+    "nodemon": "^2.0.20"
+  }
+}
