@@ -1,8 +1,11 @@
 require('dotenv').config()
+var bodyParser = require('body-parser');
 const express = require('express')
 const cors = require('cors')
 const Port = 3000
 const app = express()
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 const Client = require("./Models/Client")
 
 const { Pool } = require('pg')
@@ -51,13 +54,30 @@ app.route('/Clients')
 
     })
 
+// function addClient(clientInfo){
+//     return "insert into public.client (companyname, contactname,phonenumber,email,preferredlanguage,startdate,enddate,rate,billingtimeframe,signedcontract,projectdesription) values('Rydge Software','Kaydon Stubbs','4352622247','RydgeSoftware@gmail.com','English','2/24/2023','3/3/2023',100,'BiWeekly',true,'Create a mobile app to track time worked for clients and to send out invoices and keep track of income.')"
+// }
+
 app.route('/client')
     .post((req, res) => {
         console.log("Adding a client")
-        res.status(200);
-        res.send("Adding a client")
+        let body = req.body
+        let quarystring = `insert into public.client (companyname, contactname,phonenumber,email,preferredlanguage,startdate,enddate,rate,billingtimeframe,signedcontract,projectdesription) values('${body.companyname}','${body.contactname}','${body.phonenumber}','${body.email}','${body.preferredlanguage}','${body.startdate}','${body.enddate}','${body.rate}','${body.billingtimeframe}','${body.signedcontract}','${body.projectdescription}')`
+        console.log(quarystring)
+        pool.query(quarystring, (err, resp) => {
+            if (err) {
+                console.log(err)
+                res.status(500)
+                res.send(err)
+            }
+            else {
+                res.status(200);
+                res.send("Adding a client")
+            }
+        })
+
     })
-    .get((req,res)=>{
+    .get((req, res) => {
         console.log("getting a client by id")
         res.status(200);
         res.send("getting a client by id")
