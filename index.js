@@ -64,7 +64,7 @@ app.route('/client')
         let body = req.body
         console.log(req.body)
         console.log("-----------------------------------------------------------------------------------------------------------------------------------------------------------------")
-        let quarystring = `insert into public.client (companyname, contactname, phonenumber, email, preferredlanguage, startdate, enddate, rate, billingtimeframe, signedcontract, projectdesription) values('${body.companyname}','${body.contactname}','${body.phonenumber}','${body.email}','${body.preferredlanguage}','${body.startdate}','${body.enddate}', ${body.rate},'${body.billingtimeframe}','${body.signedcontract}','${body.projectdescription}')`
+        let quarystring = `insert into public.client (companyname, contactname, phonenumber, email, preferredlanguage, startdate, enddate, rate, billingtimeframe, signedcontract, projectdesription) values('${body.companyname}','${body.contactname}','${body.phonenumber}','${body.email}','${body.preferredlanguage}','${body.startdate}','${body.enddate}', ${body.rate},'${body.billingtimeframe}',${body.signedcontract},'${body.projectdescription}')`
         console.log(quarystring)
         pool.query(quarystring, (err, resp) => {
             if (err) {
