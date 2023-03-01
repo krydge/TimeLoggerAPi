@@ -12,14 +12,18 @@ const { Pool } = require('pg')
 app.use(cors())
 
 const pool = new Pool({
-    user: 'RydgeSoftware',
-    host: "postgres.cw6zbbgxiti2.us-west-2.rds.amazonaws.com",
-    database: 'postgres',
-    password: 'Farmerslayer12',
-    port: 5432,
+    user: process.env.USER,
+    host: process.env.HOST,
+    database: process.env.DATABASE,
+    password: process.env.PASSWORD,
+    port: process.env.PORT,
 })
 
-
+//TODO: add a client's info
+//TODO: get a client's info
+//TODO: add a clients time worked
+//TODO: get a clients worked time
+//TODO: get all clients
 app.route('/')
     .get((req, res) => {
         console.log("Get request to the '/' endpoint")
@@ -54,10 +58,6 @@ app.route('/Clients')
 
     })
 
-// function addClient(clientInfo){
-//     return "insert into public.client (companyname, contactname,phonenumber,email,preferredlanguage,startdate,enddate,rate,billingtimeframe,signedcontract,projectdesription) values('Rydge Software','Kaydon Stubbs','4352622247','RydgeSoftware@gmail.com','English','2/24/2023','3/3/2023',100,'BiWeekly',true,'Create a mobile app to track time worked for clients and to send out invoices and keep track of income.')"
-// }
-
 app.route('/client')
     .post((req, res) => {
         console.log("Adding a client")
@@ -77,12 +77,67 @@ app.route('/client')
                 res.send("Adding a client")
             }
         })
+    })
+    .get((req, res) => {
+        const clientID = req.body.id;
+        console.log("getting a client by id")
+        let quarystring = `SELECT * FROM public.client where id = ${clientID};`
+        console.log(quarystring)
+        pool.query(quarystring, (err, resp) => {
+            if (err) {
+                console.log(err)
+                res.status(500)
+                res.send(err)
+            }
+            else {
+                console.log(resp.rows)
+                res.status(200);
+                res.send(resp.rows)
+            }
+        })
+    })
+
+app.route('/clienttime')
+    .post((req, res) => {
+        const clientID = req.body.id;
+        const start = req.body.start;
+        const end = req.body.end;
+        const completed = req.body.completed
+        let quarystring = `INSERT INTO public.timelog
+        (clientid, starttime, endtime, completed)
+        VALUES(${clientID}, ${start}, ${end}, ${completed});
+        `
+        pool.query(quarystring, (err, resp) => {
+            if (err) {
+                console.log(err)
+                res.status(500)
+                res.send(err)
+            }
+            else {
+                console.log("Adding a clients Time")
+                res.status(200);
+                res.send("Adding a clients Time")
+            }
+        })
 
     })
     .get((req, res) => {
-        console.log("getting a client by id")
-        res.status(200);
-        res.send("getting a client by id")
+        const clientID = req.body.id;
+        console.log("getting a clients time by id")
+        let quarystring = `SELECT id, clientid, starttime, endtime, completed
+        FROM public.timelog where clientid = ${clientID};`
+        pool.query(quarystring, (err, resp) => {
+            if (err) {
+                console.log(err)
+                res.status(500)
+                res.send(err)
+            }
+            else {
+                console.log(resp.rows)
+                res.status(200);
+                res.send(resp.rows)
+            }
+        })
     })
 
 app.listen(Port, (error) => {
